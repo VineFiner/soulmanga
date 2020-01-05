@@ -56,6 +56,15 @@
         }
       },
       {
+        "package": "jobs",
+        "repositoryURL": "https://github.com/vapor/jobs.git",
+        "state": {
+          "branch": null,
+          "revision": "77cc49790c62d2612afde2afbc0d220a39c340f5",
+          "version": "1.0.0-beta.3.1"
+        }
+      },
+      {
         "package": "multipart-kit",
         "repositoryURL": "https://github.com/vapor/multipart-kit.git",
         "state": {
@@ -152,6 +161,15 @@
           "branch": null,
           "revision": "b015dcbe871d9c4d36bb343b0d37293521e3df07",
           "version": "2.4.5"
+        }
+      },
+      {
+        "package": "SwiftSoup",
+        "repositoryURL": "https://github.com/scinfu/SwiftSoup.git",
+        "state": {
+          "branch": null,
+          "revision": "7f187fd8804e63dea89879c95d7c2f7703727d0f",
+          "version": "2.3.0"
         }
       },
       {

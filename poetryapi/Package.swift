@@ -15,9 +15,15 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.2"),
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta.2"),
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.0.0-beta.2"),
+        .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
+        .package(url: "https://github.com/vapor/jobs.git", from: "1.0.0-beta.3.1"),
     ],
     targets: [
-        .target(name: "App", dependencies: ["Fluent", "FluentSQLiteDriver", "Vapor"]),
+        .target(name: "App", dependencies: ["Fluent",
+                                            "FluentSQLiteDriver",
+                                            "SwiftSoup",
+                                            "Jobs",
+                                            "Vapor"]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: ["App", "XCTVapor"])
     ]

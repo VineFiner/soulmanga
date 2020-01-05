@@ -5,5 +5,8 @@ public func app(_ environment: Environment) throws -> Application {
     try LoggingSystem.bootstrap(from: &environment)
     let app = Application(environment)
     try configure(app)
+    // boot
+    try app.boot()
+    try boot(app)
     return app
 }
