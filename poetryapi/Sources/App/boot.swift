@@ -13,4 +13,6 @@ public func boot(_ app: Application) throws {
     try JobsCommand(application: app, scheduled: false).startJobs(on: .default)
     // 开启定时任务
     try JobsCommand(application: app, scheduled: true).startScheduledJobs()
+    // 自动 migrate
+    _ = app.autoMigrate()
 }

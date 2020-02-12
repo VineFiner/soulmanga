@@ -9,7 +9,7 @@ func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     // Configure SQLite database
-    app.databases.use(.sqlite(file: "db.sqlite"), as: .sqlite)
+    app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
 
     // Configure migrations
     app.migrations.add(CreateTodo())
@@ -17,13 +17,19 @@ func configure(_ app: Application) throws {
     
     // Configure jobs
     app.jobs.use(custom: JobsNormalDriver())
-    app.jobs.add(Email())
+    app.jobs.add(Email(app: app))
     
     
     app.jobs.schedule(SendMessage(name: "minutely at 1", app: app))
         .minutely()
         .at(1)
     
+    // 添加定时读取任务
+    /*
+    app.jobs.schedule(ReadLocalJson(name: "read local json", app: app))
+        .minutely()
+        .at(1)
+    */
     // routes
     try routes(app)
 }
@@ -35,18 +41,7 @@ struct SendMessage: ScheduledJob {
     
     func run(context: JobContext) -> EventLoopFuture<Void> {
         context.logger.info("job \(self.name)!")
-        _ = app.jobs.queue.dispatch(Email.self, .init(to: "tanner@vapor.codes"))
-        return context.eventLoop.makeSucceededFuture(())
-    }
-}
-// 任务
-struct Email: Job {
-    struct Message: Codable {
-        var to: String
-    }
-    
-    func dequeue(_ context: JobContext, _ message: Message) -> EventLoopFuture<Void> {
-        context.logger.info("sending email to \(message.to)")
+        _ = app.jobs.queue.dispatch(Email.self, Email.Message.init(to: "tanner@vapor.codes"))
         return context.eventLoop.makeSucceededFuture(())
     }
 }

@@ -22,6 +22,9 @@ final class PoetryTang: Model, Content {
     @Field(key: "content")
     var content: String?
     
+    @Field(key: "is_simpled")
+    var isSimplified: Bool?
+    
     init() { }
     
     init(id: UUID? = nil, author: String, title: String, content: String) {
@@ -38,6 +41,7 @@ extension PoetryTang: Migration {
             .field("author", .string, .required)
             .field("title", .string, .required)
             .field("content", .string)
+            .field("is_simpled", .bool)
             .create()
     }
 
@@ -47,9 +51,8 @@ extension PoetryTang: Migration {
 }
 
 extension PoetryTang {
-    static func loadFromFile(_ fileName: String = "poet.tang.0.json") throws -> [PoetryTang] {
+    static func loadFromFile(_ poetryTangData: Data) throws -> [PoetryTang] {
         let decoder = JSONDecoder()
-        let poetryTangData = try Data.fromFile(fileName)
         let decodedPoetryTangs = try decoder.decode([PoetryTangDecoderObject].self,from: poetryTangData)
         return decodedPoetryTangs.map { PoetryTang(from: $0)}
     }
