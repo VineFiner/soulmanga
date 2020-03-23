@@ -22,6 +22,12 @@ func routes(_ app: Application) throws {
         try res.content.encode(Hello(), as: .json)
         return res // {"message":"Hello!"}
     }
+    app.get("greeting3") { req -> Response in
+        let res = Response()
+        res.headers.contentType = .plainText
+        res.body = .init(string: "can return image")
+        return res // {"message":"Hello!"}
+    }
     /*
     app.get("loadlocal") { req -> EventLoopFuture<HTTPStatus> in
         let files = Data.fetchAllFiles()

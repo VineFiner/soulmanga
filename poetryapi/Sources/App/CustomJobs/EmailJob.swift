@@ -27,7 +27,8 @@ class Email: Job {
         // 这里进行网络请求
 //        todoInfo()
 //        fetchInfo()
-        createInfo()
+//        createInfo()
+        createTodo()
         return context.eventLoop.makeSucceededFuture(())
     }
     // MARK: private
@@ -69,7 +70,35 @@ class Email: Job {
             }
         }
     }
-    
+    func createTodo() {
+        
+        struct Info: Codable {
+            let title: String
+        }
+        count = count + 1
+        let info = Info(title: "\(count)")
+        
+        let client: Application.Client = app.client
+        _ = client.post("http://localhost:8080/todos/") { req in
+            // 添加请求头
+            req.headers.add(name: "User-Agent", value: "Swift HTTPClient")
+            
+            // Encode query string to the request URL.
+            try req.query.encode(["q": "test"])
+
+            // Encode JSON to the request body.
+//            try req.content.encode(["hello": "world"])
+            try req.content.encode(info, using: JSONEncoder())
+        }
+        .flatMapThrowing { res in
+            // 解码内容
+            try res.content.decode(Todo.self)
+        }
+        .map { json in
+            // Handle the json response.
+            print(json)
+        }
+    }
     func createInfo() {
         let client: Application.Client = app.client
         let httpClient = client.http
@@ -94,7 +123,12 @@ class Email: Job {
             case .success(let response):
                 if response.status == .ok {
                     // handle response
-                    print(response)
+                    let resultData = response.body.flatMap { (buffer) -> Data? in
+                        return buffer.getData(at: 0, length: buffer.readableBytes)
+                    }
+                    if let info = resultData, let infoStr = String(data: info, encoding: .utf8) {
+                        print(infoStr)
+                    }
                 } else {
                     // handle remote error
                     print(response)
