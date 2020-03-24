@@ -6,7 +6,7 @@ import Jobs
 // Called before your application initializes.
 func configure(_ app: Application) throws {
     // Serves files from `Public/` directory
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     // Configure SQLite database
     app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
@@ -15,6 +15,9 @@ func configure(_ app: Application) throws {
     app.migrations.add(CreateTodo())
     app.migrations.add(PoetryTang())
     
+    app.migrations.add(BookInfo())
+    app.migrations.add(BookChapter())
+    app.migrations.add(CreateBookChapterUrl())
     // Configure jobs
     app.jobs.use(custom: JobsNormalDriver())
     app.jobs.add(Email(app: app))
