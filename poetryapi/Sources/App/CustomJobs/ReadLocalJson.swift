@@ -6,7 +6,7 @@
 //
 
 import Vapor
-import Jobs
+import Queues
 
 // 本地读取，定时任务
 struct ReadLocalJson: ScheduledJob {
@@ -58,7 +58,7 @@ struct ReadLocalJson: ScheduledJob {
         }
     }
     // 运行任务
-    func run(context: JobContext) -> EventLoopFuture<Void> {
+    func run(context: QueueContext) -> EventLoopFuture<Void> {
         context.logger.info("job \(self.name)!")
         // 进行存储
         saveJson()

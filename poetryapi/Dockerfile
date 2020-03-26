@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM vapor/swift:5.1 as build
+FROM vapor/swift:5.2 as build
 WORKDIR /build
 
 # Copy entire repo into container
@@ -14,7 +14,8 @@ RUN apt-get update -y \
 # Compile with optimizations
 RUN swift build \
 	--enable-test-discovery \
-	-c release
+	-c release \
+	-Xswiftc -g
 
 # ================================
 # Run image
@@ -26,5 +27,8 @@ WORKDIR /run
 COPY --from=build /build/.build/release /run
 # Copy Swift runtime libraries
 COPY --from=build /usr/lib/swift/ /usr/lib/swift/
+# Uncomment the next line if you need to load resources from the `Public` directory
+#COPY --from=build /build/Public /run/Public
 
-ENTRYPOINT ["./Run", "serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "80"]
+ENTRYPOINT ["./Run"]
+CMD ["serve", "--env", "production", "--hostname", "0.0.0.0"]

@@ -6,7 +6,7 @@
 //
 
 import Vapor
-import Jobs
+import Queues
 
 // 任务
 class Email: Job {
@@ -21,8 +21,8 @@ class Email: Job {
     struct Message: Codable {
         var to: String
     }
-    
-    func dequeue(_ context: JobContext, _ message: Message) -> EventLoopFuture<Void> {
+
+    func dequeue(_ context: QueueContext, _ message: Message) -> EventLoopFuture<Void> {
         context.logger.info("sending email to \(message.to)")
         // 这里进行网络请求
 //        todoInfo()

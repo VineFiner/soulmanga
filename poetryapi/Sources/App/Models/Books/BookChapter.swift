@@ -11,8 +11,8 @@ import Vapor
 final class BookChapter: Model, Content {
     static let schema = "bookChapter"
     
-    @ID(key: "id")
-    var id: Int?
+    @ID(key: .id)
+    var id: UUID?
     
     @Field(key: "title")
     var title: String
@@ -34,7 +34,7 @@ final class BookChapter: Model, Content {
     init() { }
     
     // Creates a new chapter with all properties set.
-    init(id: Int? = nil, title: String, linkUrl: String, isScraw: Bool,content: String, bookInfoID: Int) {
+    init(id: UUID? = nil, title: String, linkUrl: String, isScraw: Bool,content: String, bookInfoID: UUID) {
         self.id = id
         self.title = title
         self.linkUrl = linkUrl
@@ -47,7 +47,7 @@ extension BookChapter: Migration {
     // Prepares the database for storing Star models.
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.schema("bookChapter")
-            .field("id", .int, .identifier(auto: true))
+            .id()
             .field("title", .string)
             .field("link_url", .string)
             .field("scraw_status", .bool)
@@ -65,7 +65,7 @@ extension BookChapter: Migration {
 
 extension BookChapter {
     struct Public: Content {
-        let id: Int?
+        let id: UUID?
         let title: String
         let content: String
     }

@@ -4,11 +4,11 @@
 //
 //  Created by Finer  Vine on 2020/1/5.
 //
-import Jobs
+import Queues
 import Vapor
 
-struct JobsNormalDriver: JobsDriver {
-    func makeQueue(with context: JobContext) -> JobsQueue {
+struct JobsNormalDriver: QueuesDriver {
+    func makeQueue(with context: QueueContext) -> Queue {
         TestQueue(context: context)
     }
     
@@ -17,12 +17,12 @@ struct JobsNormalDriver: JobsDriver {
     }
 }
 
-struct TestQueue: JobsQueue {
+struct TestQueue: Queue {
     static var queue: [JobIdentifier] = []
     static var jobs: [JobIdentifier: JobData] = [:]
     static var lock: Lock = .init()
     
-    let context: JobContext
+    let context: QueueContext
     
     func get(_ id: JobIdentifier) -> EventLoopFuture<JobData> {
         TestQueue.lock.lock()

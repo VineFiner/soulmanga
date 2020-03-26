@@ -2,17 +2,17 @@
 //  boot.swift
 //  App
 //
-//  Created by Finer  Vine on 2020/1/5.
+//  Created by vine on 2020/3/26.
 //
 
 import Vapor
-import Jobs
+import Queues
 // Called before commands run after boot.
 public func boot(_ app: Application) throws {
-    // jobs
-    try JobsCommand(application: app, scheduled: false).startJobs(on: .default)
+    // Jobs
+    try QueuesCommand(application: app, scheduled: false).startJobs(on: .default)
     // 开启定时任务
-    try JobsCommand(application: app, scheduled: true).startScheduledJobs()
+    try QueuesCommand(application: app, scheduled: true).startScheduledJobs()
     // 自动 migrate
     _ = app.autoMigrate()
 }

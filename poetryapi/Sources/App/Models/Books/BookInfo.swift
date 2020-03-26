@@ -11,9 +11,9 @@ import Vapor
 final class BookInfo:Model, Content {
     static let schema = "bookinfo"
     
-    @ID(key: "id")
-    var id: Int?
-        
+    @ID(key: .id)
+    var id: UUID?
+    
     @Field(key: "book_name")
     var bookName: String
     
@@ -27,9 +27,9 @@ final class BookInfo:Model, Content {
     // Creates a new, empty Bookinfo.
     // Next, all models require an empty init. This allows Fluent to create new instances of the model.
     init() { }
-
+    
     // Creates a new BookInfo with all properties set.
-    init(id: Int? = nil, name: String, authorName: String) {
+    init(id: UUID? = nil, name: String, authorName: String) {
         self.id = id
         self.bookName = name
         self.authorName = authorName
@@ -37,17 +37,17 @@ final class BookInfo:Model, Content {
 }
 extension BookInfo: Migration {
     // Prepares the database for storing BookInfo models.
-     func prepare(on database: Database) -> EventLoopFuture<Void> {
-         database.schema("bookinfo")
-             .field("id", .int, .identifier(auto: true))
-             .field("book_name", .string)
-             .field("author_name", .string)
-             .create()
-     }
-
-     // Optionally reverts the changes made in the prepare method.
-     func revert(on database: Database) -> EventLoopFuture<Void> {
-         database.schema("bookinfo").delete()
-     }
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
+        database.schema("bookinfo")
+            .id()
+            .field("book_name", .string)
+            .field("author_name", .string)
+            .create()
+    }
+    
+    // Optionally reverts the changes made in the prepare method.
+    func revert(on database: Database) -> EventLoopFuture<Void> {
+        database.schema("bookinfo").delete()
+    }
 }
 
