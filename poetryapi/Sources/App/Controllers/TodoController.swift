@@ -21,16 +21,16 @@ struct TodoController {
         }
         let updateTodo = try req.content.decode(UpdateTodo.self)
                 
-        let search: EventLoopFuture<Todo> = Todo.find(req.parameters.get("todoID"), on: req.db)
+        let searchResult: EventLoopFuture<Todo> = Todo.find(req.parameters.get("todoID"), on: req.db)
             .unwrap(or: Abort(.notFound))
 
-        let result = search.flatMap { (todo) -> EventLoopFuture<Todo> in
+        let updateResult = searchResult.flatMap { (todo) -> EventLoopFuture<Todo> in
             todo.title = updateTodo.title
-            let ha = todo.update(on: req.db).map { todo }
-            return ha
+            let newTodo = todo.update(on: req.db).transform(to: todo)
+            return newTodo
         }
         
-        return result
+        return updateResult
     }
     
     /// http://127.0.0.1:8080/todos/3

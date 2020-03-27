@@ -9,10 +9,14 @@ import Vapor
 import Queues
 // Called before commands run after boot.
 public func boot(_ app: Application) throws {
+//    // Jobs
+//    try QueuesCommand(application: app, scheduled: false).startJobs(on: .default)
+//    // 开启定时任务
+//    try QueuesCommand(application: app, scheduled: true).startScheduledJobs()
     // Jobs
-    try QueuesCommand(application: app, scheduled: false).startJobs(on: .default)
+    try app.queues.startInProcessJobs(on: .default)
     // 开启定时任务
-    try QueuesCommand(application: app, scheduled: true).startScheduledJobs()
+    try app.queues.startScheduledJobs()
     // 自动 migrate
     _ = app.autoMigrate()
 }
